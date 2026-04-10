@@ -1,0 +1,14 @@
+atlassian-cli
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+.env
+.env.*
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
