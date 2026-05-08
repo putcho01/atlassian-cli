@@ -1,6 +1,6 @@
 # atlassian-cli
 
-A lightweight, native Go CLI for self-hosted Atlassian Jira and Confluence Server/Data Center instances. Built as a single binary (~15 MB), with no runtime dependencies, and easy to integrate with Claude Code as a plugin skill.
+A lightweight, native Go CLI for Atlassian Jira and Confluence Cloud (and Server/Data Center). Built as a single binary (~15 MB), with no runtime dependencies, and easy to integrate with Claude Code as a plugin skill.
 
 ## Installation
 
@@ -130,8 +130,8 @@ atlassian-cli confluence label remove 12345 outdated
 
 # Page Restrictions
 atlassian-cli confluence restriction list 12345
-atlassian-cli confluence restriction add 12345 --operation update --type user --name john
-atlassian-cli confluence restriction remove 12345 --operation update --type user --name john
+atlassian-cli confluence restriction add 12345 --operation update --type user --name <account-id>
+atlassian-cli confluence restriction remove 12345 --operation update --type user --name <account-id>
 ```
 
 ## Output Formats

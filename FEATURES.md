@@ -2,7 +2,7 @@
 
 ## Our atlassian-cli
 
-A lightweight, native Go CLI for self-hosted Atlassian Jira and Confluence Server/Data Center instances. Built as a single binary (single binary), and easy to integrate with Claude Code as a plugin skill.
+A lightweight, native Go CLI for Atlassian Jira and Confluence Cloud (and Server/Data Center). Built as a single binary, and easy to integrate with Claude Code as a plugin skill.
 
 ## Jira Features
 
@@ -33,6 +33,7 @@ A lightweight, native Go CLI for self-hosted Atlassian Jira and Confluence Serve
 
 | Feature | Details | Status |
 |---------|---------|--------|
+| Cloud API Token auth (Basic) | Via environment variables | Done |
 | Bearer token auth (PAT) | Via environment variables | Done |
 | Output formats (table/json/markdown) | `--output` / `-o` flag | Done |
 | HTML -> Markdown conversion | Confluence macros supported | Done |
