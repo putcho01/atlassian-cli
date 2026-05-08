@@ -213,6 +213,36 @@ Add to your Claude Code MCP settings:
 }
 ```
 
+## Why not the official ACLI?
+
+Atlassian provides an official CLI ([ACLI](https://developer.atlassian.com/cloud/acli/guides/introduction/)) and a [remote MCP server](https://developer.atlassian.com/cloud/acli/guides/introduction/) for AI integration. Here's how this tool differs:
+
+### vs. ACLI
+
+| | atlassian-cli | ACLI |
+|---|---|---|
+| **Distribution** | Single binary, no dependencies | Requires package installation |
+| **Authentication** | Environment variables only | Interactive `acli auth login` |
+| **CI/CD friendliness** | High — no browser flow needed | Limited — headless login is cumbersome |
+| **Server/DC support** | Yes (PAT auth) | Cloud-focused |
+| **Target audience** | Developers, automation, AI agents | Admins, bulk operations |
+
+### vs. Atlassian remote MCP server
+
+Atlassian's remote MCP server went GA in February 2026, but comes with trade-offs:
+
+- **Context-heavy** — loads 73 tool schemas upfront, consuming 40–50% of the context window before any real work
+- **OAuth required** — browser-based auth flow; not suitable for headless or CI/CD environments
+- **Network dependency** — requires an outbound connection to Atlassian's remote server
+
+This tool's `--tools` flag lets you load only the groups you need, keeping token usage minimal for AI agents.
+
+### When to choose this tool
+
+- Running in **CI/CD pipelines** or automation scripts (auth via environment variables only)
+- Using both **Server/Data Center and Cloud** with a single interface
+- Embedding as an **MCP server** in AI agents where context efficiency matters
+
 ## License
 
 MIT
