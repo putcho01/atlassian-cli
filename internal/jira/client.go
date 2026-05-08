@@ -114,7 +114,7 @@ func buildCreateFields(input *CreateIssueInput) map[string]any {
 		fields["description"] = input.Description
 	}
 	if input.Assignee != "" {
-		fields["assignee"] = map[string]string{"name": input.Assignee}
+		fields["assignee"] = map[string]string{"accountId": input.Assignee}
 	}
 	if input.Priority != "" {
 		fields["priority"] = map[string]string{"name": input.Priority}

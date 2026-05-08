@@ -2,8 +2,7 @@ package jira
 
 type User struct {
 	Self         string `json:"self"`
-	Key          string `json:"key"`
-	Name         string `json:"name"`
+	AccountID    string `json:"accountId"`
 	EmailAddress string `json:"emailAddress"`
 	DisplayName  string `json:"displayName"`
 	Active       bool   `json:"active"`

@@ -76,7 +76,7 @@ func init() {
 	for _, cmd := range []*cobra.Command{confluenceRestrictionAddCmd, confluenceRestrictionRemoveCmd} {
 		cmd.Flags().String("operation", "update", "Operation: read or update")
 		cmd.Flags().String("type", "user", "Restriction type: user or group")
-		cmd.Flags().String("name", "", "Username or group name")
+		cmd.Flags().String("name", "", "Account ID (user) or group name")
 		_ = cmd.MarkFlagRequired("name")
 	}
 	confluenceRestrictionCmd.AddCommand(confluenceRestrictionListCmd)

@@ -59,15 +59,15 @@ func (f *Formatter) PrintUser(user *jira.User) error {
 	case Markdown:
 		fmt.Fprintf(f.writer, "## User: %s\n\n", user.DisplayName)
 		fmt.Fprintf(f.writer, "| Field | Value |\n|-------|-------|\n")
-		fmt.Fprintf(f.writer, "| Name | %s |\n", user.Name)
+		fmt.Fprintf(f.writer, "| Account ID | %s |\n", user.AccountID)
 		fmt.Fprintf(f.writer, "| Display Name | %s |\n", user.DisplayName)
 		fmt.Fprintf(f.writer, "| Email | %s |\n", user.EmailAddress)
 		fmt.Fprintf(f.writer, "| Active | %v |\n", user.Active)
 		return nil
 	default:
 		tw := tabwriter.NewWriter(f.writer, 0, 4, 2, ' ', 0)
-		fmt.Fprintf(tw, "NAME\tDISPLAY NAME\tEMAIL\tACTIVE\n")
-		fmt.Fprintf(tw, "%s\t%s\t%s\t%v\n", user.Name, user.DisplayName, user.EmailAddress, user.Active)
+		fmt.Fprintf(tw, "ACCOUNT ID\tDISPLAY NAME\tEMAIL\tACTIVE\n")
+		fmt.Fprintf(tw, "%s\t%s\t%s\t%v\n", user.AccountID, user.DisplayName, user.EmailAddress, user.Active)
 		return tw.Flush()
 	}
 }

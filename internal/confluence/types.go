@@ -29,7 +29,7 @@ type Version struct {
 
 type User struct {
 	Type        string `json:"type"`
-	Username    string `json:"username"`
+	AccountID   string `json:"accountId"`
 	DisplayName string `json:"displayName"`
 }
 

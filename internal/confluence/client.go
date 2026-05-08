@@ -64,9 +64,17 @@ func (c *Client) AddRestriction(ctx context.Context, pageID string, input *Restr
 }
 
 func (c *Client) RemoveRestriction(ctx context.Context, pageID string, input *RestrictionInput) error {
-	path := fmt.Sprintf("/rest/api/content/%s/restriction/byOperation/%s/%s/userName/%s",
-		url.PathEscape(pageID), url.PathEscape(input.Operation), url.PathEscape(input.Type), url.PathEscape(input.Name))
-	return c.http.Do(ctx, "DELETE", path, nil, nil, nil)
+	q := url.Values{}
+	var path string
+	if input.Type == "user" {
+		path = fmt.Sprintf("/rest/api/content/%s/restriction/byOperation/%s/user",
+			url.PathEscape(pageID), url.PathEscape(input.Operation))
+		q.Set("accountId", input.Name)
+	} else {
+		path = fmt.Sprintf("/rest/api/content/%s/restriction/byOperation/%s/group/%s",
+			url.PathEscape(pageID), url.PathEscape(input.Operation), url.PathEscape(input.Name))
+	}
+	return c.http.Do(ctx, "DELETE", path, q, nil, nil)
 }
 
 func (c *Client) GetAttachments(ctx context.Context, pageID string) ([]Attachment, error) {
@@ -91,8 +99,8 @@ func buildRestrictionBody(input *RestrictionInput) []map[string]any {
 	subject := map[string]any{}
 	if input.Type == "user" {
 		subject["user"] = map[string]any{
-			"type":     "known",
-			"username": input.Name,
+			"type":      "known",
+			"accountId": input.Name,
 		}
 	} else {
 		subject["group"] = map[string]any{

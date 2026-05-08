@@ -43,7 +43,7 @@ func init() {
 	jiraIssueCreateCmd.Flags().String("summary", "", "Issue summary (required)")
 	jiraIssueCreateCmd.Flags().String("type", "Task", "Issue type")
 	jiraIssueCreateCmd.Flags().String("description", "", "Issue description")
-	jiraIssueCreateCmd.Flags().String("assignee", "", "Assignee username")
+	jiraIssueCreateCmd.Flags().String("assignee", "", "Assignee account ID")
 	jiraIssueCreateCmd.Flags().String("priority", "", "Priority name")
 	jiraIssueCreateCmd.Flags().StringSlice("labels", nil, "Labels")
 	_ = jiraIssueCreateCmd.MarkFlagRequired("project")
