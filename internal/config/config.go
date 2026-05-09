@@ -8,9 +8,10 @@ import (
 // AtlassianConfig holds connection settings for an Atlassian service.
 // Email が設定されていれば Basic 認証 (Cloud)、未設定なら Bearer 認証 (Server/DC)。
 type AtlassianConfig struct {
-	URL   string
-	Email string
-	Token string
+	URL            string
+	Email          string
+	Token          string
+	DefaultProject string
 }
 
 func loadConfig(prefix string) (*AtlassianConfig, error) {
@@ -28,7 +29,12 @@ func loadConfig(prefix string) (*AtlassianConfig, error) {
 		return nil, fmt.Errorf("%s_API_TOKEN (or %s_PERSONAL_TOKEN) environment variable is required", prefix, prefix)
 	}
 
-	return &AtlassianConfig{URL: url, Email: email, Token: token}, nil
+	return &AtlassianConfig{
+		URL:            url,
+		Email:          email,
+		Token:          token,
+		DefaultProject: os.Getenv(prefix + "_DEFAULT_PROJECT"),
+	}, nil
 }
 
 func LoadJiraConfig() (*AtlassianConfig, error)       { return loadConfig("JIRA") }
