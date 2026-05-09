@@ -107,6 +107,7 @@ Used with Atlassian Cloud (`*.atlassian.net`). Authenticates via Basic auth usin
 | `JIRA_URL` | Jira Cloud URL (e.g. `https://your-domain.atlassian.net`) |
 | `JIRA_EMAIL` | Your Atlassian account email address |
 | `JIRA_API_TOKEN` | [API Token](https://id.atlassian.com/manage-profile/security/api-tokens) |
+| `JIRA_DEFAULT_PROJECT` | Default project key used when `--project` is omitted (optional) |
 | `CONFLUENCE_URL` | Confluence Cloud URL (e.g. `https://your-domain.atlassian.net/wiki`) |
 | `CONFLUENCE_EMAIL` | Your Atlassian account email address |
 | `CONFLUENCE_API_TOKEN` | API Token |
@@ -119,6 +120,7 @@ Used with self-hosted Jira/Confluence Server/DC. Authenticates via Bearer auth u
 |----------|-------------|
 | `JIRA_URL` | Jira base URL (e.g. `https://jira.example.com`) |
 | `JIRA_PERSONAL_TOKEN` | Personal Access Token |
+| `JIRA_DEFAULT_PROJECT` | Default project key used when `--project` is omitted (optional) |
 | `CONFLUENCE_URL` | Confluence base URL |
 | `CONFLUENCE_PERSONAL_TOKEN` | Personal Access Token |
 
@@ -137,7 +139,7 @@ atlassian-cli jira myself                # Show authenticated user
 # Issues
 atlassian-cli jira issue get PROJ-123    # Get issue (includes description)
 atlassian-cli jira issue search "project = PROJ"  # Search issues via JQL
-atlassian-cli jira issue create --project PROJ --summary "New task"
+atlassian-cli jira issue create --project PROJ --summary "New task"  # or omit --project if JIRA_DEFAULT_PROJECT is set
 atlassian-cli jira issue update PROJ-123 --field summary="Updated summary"
 atlassian-cli jira issue delete PROJ-123
 atlassian-cli jira issue subtasks PROJ-123
