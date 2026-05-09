@@ -139,7 +139,8 @@ atlassian-cli jira myself                # Show authenticated user
 # Issues
 atlassian-cli jira issue get PROJ-123    # Get issue (includes description)
 atlassian-cli jira issue open PROJ-123   # Open issue in browser
-atlassian-cli jira issue search "project = PROJ"  # Search issues via JQL
+atlassian-cli jira issue search "project = PROJ"       # Search issues via JQL
+atlassian-cli jira issue search "project = PROJ" -i    # Interactive TUI picker (↑/↓ navigate, enter detail, o open, q quit)
 atlassian-cli jira issue create --project PROJ --summary "New task"  # or omit --project if JIRA_DEFAULT_PROJECT is set
 atlassian-cli jira issue update PROJ-123 --field summary="Updated summary"
 atlassian-cli jira issue delete PROJ-123
