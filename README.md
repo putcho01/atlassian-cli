@@ -1,6 +1,33 @@
 # atlassian-cli
 
-A lightweight, native Go CLI for Atlassian Jira and Confluence Cloud (and Server/Data Center). Built as a single binary (~15 MB), with no runtime dependencies, and easy to integrate with Claude Code as a plugin skill.
+<div align="center">
+  <a href="https://agentops.ai?ref=gh">
+    <img src="docs/images/external/logo/github-banner.png" alt="Logo">
+  </a>
+</div>
+
+<div align="center">
+  <em>A lightweight, native Go CLI for Atlassian Jira and Confluence</em>
+</div>
+
+<br />
+
+<div align="center">
+  <a href="https://github.com/putcho01/atlassian-cli/releases">
+    <img src="https://img.shields.io/github/v/release/putcho01/atlassian-cli?color=3670A0" alt="Release">
+  </a>
+  <a href="https://github.com/putcho01/atlassian-cli/commits/main">
+    <img src="https://img.shields.io/github/commit-activity/m/putcho01/atlassian-cli" alt="Commit activity">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg?color=3670A0" alt="License: MIT">
+  </a>
+  <a href="https://pkg.go.dev/github.com/putcho01/atlassian-cli">
+    <img src="https://pkg.go.dev/badge/github.com/putcho01/atlassian-cli.svg" alt="Go Reference">
+  </a>
+</div>
+
+<br />
 
 ## Installation
 
