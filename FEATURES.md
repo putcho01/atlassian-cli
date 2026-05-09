@@ -25,6 +25,8 @@ A lightweight, native Go CLI for Atlassian Jira and Confluence Cloud (and Server
 | Feature | Command | Status |
 |---------|---------|--------|
 | Get page | `confluence page get <id>` | Done |
+| Create page | `confluence page create --space --title --body [--parent]` | Done |
+| Update page | `confluence page update <id> --title --body --version` | Done |
 | List labels | `confluence label list <id>` | Done |
 | Add labels | `confluence label add <id> <labels>` | Done |
 | Remove label | `confluence label remove <id> <label>` | Done |

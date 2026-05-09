@@ -156,6 +156,10 @@ atlassian-cli jira issue comment add PROJ-123 --body "Looks good to me"
 ```bash
 # Pages
 atlassian-cli confluence page get 12345          # Get page content
+atlassian-cli confluence page create --space PROJ --title "New Page" --body "<p>Hello</p>"
+atlassian-cli confluence page create --space PROJ --title "Child Page" --parent 12345 --body "<p>Child</p>"
+atlassian-cli confluence page update 12345 --title "Updated Title" --body "<p>New content</p>"           # version auto-detected
+atlassian-cli confluence page update 12345 --title "Updated Title" --body "<p>New content</p>" --version 3  # explicit version
 
 # Labels
 atlassian-cli confluence label list 12345
