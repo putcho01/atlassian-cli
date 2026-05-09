@@ -71,8 +71,22 @@ func TestConvert(t *testing.T) {
 			`<ac:link><ri:page ri:content-title="My Page"/></ac:link>`,
 			"*My Page*",
 		},
-		// html.Parse pulls subsequent text into a self-closing ac:emoticon as children, so "more" is consumed
-		{"emoticon and following text consumed", `text<ac:emoticon ac:name="smile"/>more`, "text"},
+		{"emoticon skipped, following text preserved", `text<ac:emoticon ac:name="smile"/>more`, "textmore"},
+		{
+			"h2 with emoticon and nbsp",
+			"<h2><ac:emoticon ac:name=\"blue-star\" ac:emoji-shortname=\":thinking:\" /> 問題の提示</h2>",
+			"## 問題の提示",
+		},
+		{
+			"ac:placeholder text preserved",
+			"<p><ac:placeholder>プレースホルダーテキスト</ac:placeholder></p>",
+			"プレースホルダーテキスト",
+		},
+		{
+			"status macro",
+			`<ac:structured-macro ac:name="status"><ac:parameter ac:name="title">進行中</ac:parameter><ac:parameter ac:name="colour">Yellow</ac:parameter></ac:structured-macro>`,
+			"進行中",
+		},
 		{"p with inline code", "<p>Use <code>go test</code> to run</p>", "Use `go test` to run"},
 	}
 

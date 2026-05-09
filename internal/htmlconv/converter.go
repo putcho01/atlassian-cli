@@ -26,7 +26,7 @@ func Convert(htmlStr string) string {
 func walkNode(b *strings.Builder, n *html.Node) {
 	switch n.Type {
 	case html.TextNode:
-		b.WriteString(n.Data)
+		b.WriteString(strings.ReplaceAll(n.Data, " ", " "))
 		return
 	case html.ElementNode:
 		renderElement(b, n)
@@ -51,7 +51,8 @@ func renderElement(b *strings.Builder, n *html.Node) {
 		return
 	}
 	if tag == "ac:emoticon" {
-		return // skip emoticons
+		walkChildren(b, n) // parser may absorb following text nodes as children
+		return
 	}
 	if tag == "ac:plain-text-body" || tag == "ac:rich-text-body" {
 		walkChildren(b, n)
@@ -63,29 +64,14 @@ func renderElement(b *strings.Builder, n *html.Node) {
 	}
 
 	switch tag {
-	case "h1":
-		b.WriteString("\n# ")
-		walkChildren(b, n)
-		b.WriteString("\n\n")
-	case "h2":
-		b.WriteString("\n## ")
-		walkChildren(b, n)
-		b.WriteString("\n\n")
-	case "h3":
-		b.WriteString("\n### ")
-		walkChildren(b, n)
-		b.WriteString("\n\n")
-	case "h4":
-		b.WriteString("\n#### ")
-		walkChildren(b, n)
-		b.WriteString("\n\n")
-	case "h5":
-		b.WriteString("\n##### ")
-		walkChildren(b, n)
-		b.WriteString("\n\n")
-	case "h6":
-		b.WriteString("\n###### ")
-		walkChildren(b, n)
+	case "h1", "h2", "h3", "h4", "h5", "h6":
+		level := map[string]string{"h1": "#", "h2": "##", "h3": "###", "h4": "####", "h5": "#####", "h6": "######"}[tag]
+		var inner strings.Builder
+		walkChildren(&inner, n)
+		b.WriteString("\n")
+		b.WriteString(level)
+		b.WriteString(" ")
+		b.WriteString(strings.TrimSpace(inner.String()))
 		b.WriteString("\n\n")
 	case "p":
 		walkChildren(b, n)
@@ -177,6 +163,10 @@ func renderMacro(b *strings.Builder, n *html.Node) {
 		b.WriteString(":** ")
 		b.WriteString(text)
 		b.WriteString("\n\n")
+
+	case "status":
+		title := getMacroParam(n, "title")
+		b.WriteString(title)
 
 	case "toc":
 		// Remove table of contents macro
