@@ -211,6 +211,46 @@ func (f *Formatter) PrintLabels(labels []confluence.Label) error {
 	}
 }
 
+func (f *Formatter) PrintComments(comments []jira.Comment) error {
+	switch f.format {
+	case JSON:
+		return f.PrintJSON(comments)
+	case Markdown:
+		for i := range comments {
+			if err := f.PrintComment(&comments[i]); err != nil {
+				return err
+			}
+		}
+		return nil
+	default:
+		tw := tabwriter.NewWriter(f.writer, 0, 4, 2, ' ', 0)
+		fmt.Fprintf(tw, "ID\tAUTHOR\tCREATED\tBODY\n")
+		for _, c := range comments {
+			body := []rune(c.Body)
+			if len(body) > 80 {
+				body = append(body[:77], []rune("...")...)
+			}
+			fmt.Fprintf(tw, "%s\t%s\t%s\t%s\n", c.ID, safeUserDisplay(c.Author, "Unknown"), c.Created, string(body))
+		}
+		return tw.Flush()
+	}
+}
+
+func (f *Formatter) PrintComment(c *jira.Comment) error {
+	switch f.format {
+	case JSON:
+		return f.PrintJSON(c)
+	case Markdown:
+		fmt.Fprintf(f.writer, "### %s — %s\n\n%s\n", safeUserDisplay(c.Author, "Unknown"), c.Created, htmlconv.Convert(c.Body))
+		return nil
+	default:
+		fmt.Fprintf(f.writer, "ID\tAUTHOR\tCREATED\n")
+		fmt.Fprintf(f.writer, "%s\t%s\t%s\n", c.ID, safeUserDisplay(c.Author, "Unknown"), c.Created)
+		fmt.Fprintf(f.writer, "\n%s\n", htmlconv.Convert(c.Body))
+		return nil
+	}
+}
+
 // PrintMessage prints a simple success/info message.
 func (f *Formatter) PrintMessage(msg string) error {
 	switch f.format {
@@ -243,9 +283,13 @@ func safePriority(p *jira.Priority) string {
 	return p.Name
 }
 
-func safeUser(u *jira.User) string {
+func safeUserDisplay(u *jira.User, fallback string) string {
 	if u == nil {
-		return "Unassigned"
+		return fallback
 	}
 	return u.DisplayName
+}
+
+func safeUser(u *jira.User) string {
+	return safeUserDisplay(u, "Unassigned")
 }

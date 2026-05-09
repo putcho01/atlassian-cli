@@ -96,6 +96,21 @@ func (c *Client) TransitionIssue(ctx context.Context, key, statusName string) er
 	return c.http.Do(ctx, "POST", "/rest/api/2/issue/"+url.PathEscape(key)+"/transitions", nil, body, nil)
 }
 
+func (c *Client) ListComments(ctx context.Context, key string) ([]Comment, error) {
+	var resp commentsResponse
+	err := c.http.Do(ctx, "GET", "/rest/api/2/issue/"+url.PathEscape(key)+"/comment", nil, nil, &resp)
+	return resp.Comments, err
+}
+
+func (c *Client) AddComment(ctx context.Context, key, body string) (*Comment, error) {
+	payload := map[string]any{"body": body}
+	var comment Comment
+	if err := c.http.Do(ctx, "POST", "/rest/api/2/issue/"+url.PathEscape(key)+"/comment", nil, payload, &comment); err != nil {
+		return nil, err
+	}
+	return &comment, nil
+}
+
 func (c *Client) GetSubtasks(ctx context.Context, key string) ([]Issue, error) {
 	issue, err := c.GetIssue(ctx, key)
 	if err != nil {

@@ -86,3 +86,18 @@ type CreateIssueInput struct {
 type transitionsResponse struct {
 	Transitions []Transition `json:"transitions"`
 }
+
+type Comment struct {
+	ID      string `json:"id"`
+	Author  *User  `json:"author"`
+	Body    string `json:"body"`
+	Created string `json:"created"`
+	Updated string `json:"updated"`
+}
+
+type commentsResponse struct {
+	Comments   []Comment `json:"comments"`
+	Total      int       `json:"total"`
+	StartAt    int       `json:"startAt"`
+	MaxResults int       `json:"maxResults"`
+}

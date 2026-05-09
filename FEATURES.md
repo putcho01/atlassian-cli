@@ -17,6 +17,8 @@ A lightweight, native Go CLI for Atlassian Jira and Confluence Cloud (and Server
 | Delete issue | `jira issue delete <key>` | Done |
 | Subtasks | `jira issue subtasks <key>` | Done |
 | Transition issue | `jira issue transition <key> <status>` | Done |
+| List comments | `jira issue comment list <key>` | Done |
+| Add comment | `jira issue comment add <key> <body>` | Done |
 
 ## Confluence Features
 
