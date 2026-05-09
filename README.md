@@ -31,18 +31,12 @@
 
 ## Installation
 
-### From source (requires Go 1.23+)
-
-```bash
-go build -o atlassian-cli .
-```
-
 ### go install (recommended)
 
-Install to `$GOPATH/bin` so you can run it from anywhere:
+Requires Go 1.21+:
 
 ```bash
-go install .
+go install github.com/putcho01/atlassian-cli@latest
 ```
 
 > If `$GOPATH/bin` is not in your `$PATH`, add the following to your shell config (`~/.zshrc`, etc.):
@@ -51,10 +45,12 @@ go install .
 > export PATH="$PATH:$(go env GOPATH)/bin"
 > ```
 
-### With version info
+### From source
 
 ```bash
-go build -ldflags "-X github.com/putcho01/atlassian-cli/cmd.Version=1.0.0" -o atlassian-cli .
+git clone https://github.com/putcho01/atlassian-cli.git
+cd atlassian-cli
+go build -o atlassian-cli .
 ```
 
 ## Quick Start
