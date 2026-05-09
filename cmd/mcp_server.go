@@ -13,7 +13,7 @@ var mcpServerCmd = &cobra.Command{
 	Long:  "Start an MCP server that communicates via stdio using JSON-RPC. This allows AI assistants to interact with Jira and Confluence.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		toolGroups, _ := cmd.Flags().GetStringSlice("tools")
-		return mcptools.Run(cmd.Context(), Version, toolGroups)
+		return mcptools.Run(cmd.Context(), version, toolGroups)
 	},
 }
 
