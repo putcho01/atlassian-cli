@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 	"runtime"
-	"strings"
 
-	"github.com/putcho01/atlassian-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -15,13 +13,16 @@ var jiraIssueOpenCmd = &cobra.Command{
 	Short: "Open a Jira issue in the browser",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cfg, err := config.LoadJiraConfig()
+		client, err := newJiraClient()
 		if err != nil {
 			return err
 		}
-		url := strings.TrimRight(cfg.URL, "/") + "/browse/" + args[0]
-		return openBrowser(url)
+		return openBrowser(issueURL(client.BaseURL(), args[0]))
 	},
+}
+
+func issueURL(baseURL, key string) string {
+	return baseURL + "/browse/" + key
 }
 
 func openBrowser(url string) error {

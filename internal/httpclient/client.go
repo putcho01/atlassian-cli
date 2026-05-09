@@ -54,6 +54,8 @@ func NewFromConfig(baseURL, email, token string) *Client {
 	}
 }
 
+func (c *Client) BaseURL() string { return c.baseURL }
+
 // Get performs a GET request and returns the raw response.
 func (c *Client) Get(ctx context.Context, path string, query url.Values) (*http.Response, error) {
 	return c.do(ctx, http.MethodGet, path, query, nil)
