@@ -95,3 +95,17 @@ type AttachmentResponse struct {
 	Results []Attachment `json:"results"`
 	Size    int          `json:"size"`
 }
+
+type CreatePageInput struct {
+	SpaceKey string
+	Title    string
+	Body     string
+	ParentID string
+}
+
+type UpdatePageInput struct {
+	Title   string
+	Body    string
+	Version int
+	Message string
+}
