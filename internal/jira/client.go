@@ -19,6 +19,8 @@ func NewClient(cfg *config.AtlassianConfig) *Client {
 	return &Client{http: httpclient.NewFromConfig(cfg.URL, cfg.Email, cfg.Token)}
 }
 
+func (c *Client) BaseURL() string { return c.http.BaseURL() }
+
 func (c *Client) GetMyself(ctx context.Context) (*User, error) {
 	var user User
 	err := c.http.Do(ctx, "GET", "/rest/api/2/myself", nil, nil, &user)

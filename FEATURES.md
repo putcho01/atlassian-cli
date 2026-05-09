@@ -12,6 +12,7 @@ A lightweight, native Go CLI for Atlassian Jira and Confluence Cloud (and Server
 | Get issue | `jira issue get <key>` | Done |
 | Open issue in browser | `jira issue open <key>` | Done |
 | Search issues (JQL) | `jira issue search <jql>` | Done |
+| Interactive TUI picker | `jira issue search <jql> -i` | Done |
 | Create issue | `jira issue create --project --summary ...` | Done |
 | Update issue | `jira issue update <key> --field value` | Done |
 | Delete issue | `jira issue delete <key>` | Done |
