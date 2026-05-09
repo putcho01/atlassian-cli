@@ -134,6 +134,85 @@ func TestBuildCreateFields(t *testing.T) {
 	}
 }
 
+func TestListComments(t *testing.T) {
+	t.Parallel()
+	comments := []Comment{
+		{ID: "1", Author: &User{DisplayName: "Alice"}, Body: "Hello", Created: "2024-01-01"},
+		{ID: "2", Author: &User{DisplayName: "Bob"}, Body: "World", Created: "2024-01-02"},
+	}
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/rest/api/2/issue/TEST-1/comment", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(commentsResponse{Comments: comments, Total: 2})
+	})
+	srv := httptest.NewServer(mux)
+	defer srv.Close()
+
+	got, err := newTestJiraClient(srv.URL).ListComments(context.Background(), "TEST-1")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if diff := cmp.Diff(comments, got); diff != "" {
+		t.Errorf("ListComments() diff (-want +got):\n%s", diff)
+	}
+}
+
+func TestAddComment(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		body    string
+		want    *Comment
+		wantErr bool
+	}{
+		{
+			name: "success",
+			body: "This is a comment",
+			want: &Comment{ID: "10", Author: &User{DisplayName: "Alice"}, Body: "This is a comment", Created: "2024-01-01"},
+		},
+		{
+			name:    "server error",
+			body:    "error",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mux := http.NewServeMux()
+			mux.HandleFunc("/rest/api/2/issue/TEST-1/comment", func(w http.ResponseWriter, r *http.Request) {
+				var req map[string]any
+				json.NewDecoder(r.Body).Decode(&req)
+				if req["body"] == "error" {
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(tt.want)
+			})
+			srv := httptest.NewServer(mux)
+			defer srv.Close()
+
+			got, err := newTestJiraClient(srv.URL).AddComment(context.Background(), "TEST-1", tt.body)
+			if tt.wantErr {
+				if err == nil {
+					t.Fatal("expected error but got nil")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("AddComment() diff (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
+
 func TestTransitionIssue(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
