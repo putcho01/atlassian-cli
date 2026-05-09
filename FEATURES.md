@@ -10,6 +10,7 @@ A lightweight, native Go CLI for Atlassian Jira and Confluence Cloud (and Server
 |---------|---------|--------|
 | Auth verification | `jira myself` | Done |
 | Get issue | `jira issue get <key>` | Done |
+| Open issue in browser | `jira issue open <key>` | Done |
 | Search issues (JQL) | `jira issue search <jql>` | Done |
 | Create issue | `jira issue create --project --summary ...` | Done |
 | Update issue | `jira issue update <key> --field value` | Done |

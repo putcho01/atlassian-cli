@@ -136,6 +136,7 @@ atlassian-cli jira myself                # Show authenticated user
 
 # Issues
 atlassian-cli jira issue get PROJ-123    # Get issue (includes description)
+atlassian-cli jira issue open PROJ-123   # Open issue in browser
 atlassian-cli jira issue search "project = PROJ"  # Search issues via JQL
 atlassian-cli jira issue create --project PROJ --summary "New task"
 atlassian-cli jira issue update PROJ-123 --field summary="Updated summary"
