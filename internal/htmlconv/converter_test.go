@@ -82,6 +82,11 @@ func TestConvert(t *testing.T) {
 			"<p><ac:placeholder>プレースホルダーテキスト</ac:placeholder></p>",
 			"プレースホルダーテキスト",
 		},
+		{
+			"status macro",
+			`<ac:structured-macro ac:name="status"><ac:parameter ac:name="title">進行中</ac:parameter><ac:parameter ac:name="colour">Yellow</ac:parameter></ac:structured-macro>`,
+			"進行中",
+		},
 		{"p with inline code", "<p>Use <code>go test</code> to run</p>", "Use `go test` to run"},
 	}
 

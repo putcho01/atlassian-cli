@@ -164,6 +164,10 @@ func renderMacro(b *strings.Builder, n *html.Node) {
 		b.WriteString(text)
 		b.WriteString("\n\n")
 
+	case "status":
+		title := getMacroParam(n, "title")
+		b.WriteString(title)
+
 	case "toc":
 		// Remove table of contents macro
 
