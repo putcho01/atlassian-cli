@@ -10,15 +10,15 @@ A lightweight, native Go CLI for Atlassian Jira and Confluence Cloud (and Server
 go build -o atlassian-cli .
 ```
 
-### go install (推奨)
+### go install (recommended)
 
-`$GOPATH/bin` にインストールし、どこからでも実行できるようにします:
+Install to `$GOPATH/bin` so you can run it from anywhere:
 
 ```bash
 go install .
 ```
 
-> `$GOPATH/bin` が `$PATH` に含まれていない場合は、シェル設定 (`~/.zshrc` 等) に以下を追加してください:
+> If `$GOPATH/bin` is not in your `$PATH`, add the following to your shell config (`~/.zshrc`, etc.):
 >
 > ```bash
 > export PATH="$PATH:$(go env GOPATH)/bin"
@@ -32,11 +32,11 @@ go build -ldflags "-X github.com/putcho01/atlassian-cli/cmd.Version=1.0.0" -o at
 
 ## Quick Start
 
-### Cloud (atlassian.net) の場合
+### Cloud (atlassian.net)
 
-1. [API Token を作成](https://id.atlassian.com/manage-profile/security/api-tokens)
+1. [Create an API Token](https://id.atlassian.com/manage-profile/security/api-tokens)
 
-2. 環境変数を設定:
+2. Set environment variables:
 
 ```bash
 export JIRA_URL=https://your-domain.atlassian.net
@@ -44,13 +44,13 @@ export JIRA_EMAIL=you@example.com
 export JIRA_API_TOKEN=your-api-token
 ```
 
-3. 認証確認:
+3. Verify authentication:
 
 ```bash
 atlassian-cli jira myself
 ```
 
-Confluence も使う場合は追加で設定:
+To use Confluence as well, set the additional variables:
 
 ```bash
 export CONFLUENCE_URL=https://your-domain.atlassian.net/wiki
@@ -58,35 +58,35 @@ export CONFLUENCE_EMAIL=you@example.com
 export CONFLUENCE_API_TOKEN=your-api-token
 ```
 
-### Server/Data Center の場合
+### Server/Data Center
 
 ```bash
 export JIRA_URL=https://jira.example.com
 export JIRA_PERSONAL_TOKEN=your-pat
 ```
 
-> `JIRA_EMAIL` を設定しなければ自動的に Bearer (PAT) 認証になります。
+> If `JIRA_EMAIL` is not set, Bearer (PAT) authentication is used automatically.
 
 ## Authentication
 
-2つの認証方式をサポートしています:
+Two authentication methods are supported:
 
 ### Cloud - API Token (Basic Auth)
 
-Atlassian Cloud (`*.atlassian.net`) で利用。メールアドレスと API Token の組み合わせで Basic 認証します。
+Used with Atlassian Cloud (`*.atlassian.net`). Authenticates via Basic auth using your email address and API token.
 
 | Variable | Description |
 |----------|-------------|
 | `JIRA_URL` | Jira Cloud URL (e.g. `https://your-domain.atlassian.net`) |
-| `JIRA_EMAIL` | Atlassian アカウントのメールアドレス |
+| `JIRA_EMAIL` | Your Atlassian account email address |
 | `JIRA_API_TOKEN` | [API Token](https://id.atlassian.com/manage-profile/security/api-tokens) |
 | `CONFLUENCE_URL` | Confluence Cloud URL (e.g. `https://your-domain.atlassian.net/wiki`) |
-| `CONFLUENCE_EMAIL` | Atlassian アカウントのメールアドレス |
+| `CONFLUENCE_EMAIL` | Your Atlassian account email address |
 | `CONFLUENCE_API_TOKEN` | API Token |
 
 ### Server/Data Center - Personal Access Token (Bearer)
 
-自前ホスティングの Jira/Confluence Server/DC で利用。PAT で Bearer 認証します。
+Used with self-hosted Jira/Confluence Server/DC. Authenticates via Bearer auth using a PAT.
 
 | Variable | Description |
 |----------|-------------|
@@ -95,7 +95,7 @@ Atlassian Cloud (`*.atlassian.net`) で利用。メールアドレスと API Tok
 | `CONFLUENCE_URL` | Confluence base URL |
 | `CONFLUENCE_PERSONAL_TOKEN` | Personal Access Token |
 
-> `EMAIL` が設定されていれば Basic 認証 (Cloud)、未設定なら Bearer 認証 (Server/DC) が使われます。
+> If `EMAIL` is set, Basic auth (Cloud) is used; otherwise Bearer auth (Server/DC) is used.
 
 Only the variables for the service you use are required. For example, if you only use Jira, you don't need to set the Confluence variables.
 
