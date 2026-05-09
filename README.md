@@ -145,6 +145,10 @@ atlassian-cli jira issue update PROJ-123 --field summary="Updated summary"
 atlassian-cli jira issue delete PROJ-123
 atlassian-cli jira issue subtasks PROJ-123
 atlassian-cli jira issue transition PROJ-123 "In Progress"
+
+# Comments
+atlassian-cli jira issue comment list PROJ-123
+atlassian-cli jira issue comment add PROJ-123 --body "Looks good to me"
 ```
 
 ### Confluence
