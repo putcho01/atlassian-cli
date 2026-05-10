@@ -1,9 +1,7 @@
 # atlassian-cli
 
 <div align="center">
-  <a href="https://agentops.ai?ref=gh">
-    <img src="docs/images/external/logo/github-banner.png" alt="Logo">
-  </a>
+  <img src="docs/images/external/logo/github-banner.png" alt="Logo">
 </div>
 
 <div align="center">
