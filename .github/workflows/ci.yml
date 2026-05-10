@@ -21,4 +21,4 @@ jobs:
         run: go install github.com/mfridman/tparse@latest
 
       - name: Run tests
-        run: go test --shuffle on --race -json -v ./... | tee ./test.json | tparse -all | tee -a $GITHUB_STEP_SUMMARY
+        run: go test --shuffle on --race -json ./... | tparse -all -format markdown | tee -a $GITHUB_STEP_SUMMARY
