@@ -1,5 +1,6 @@
 package jira
 
+// User represents a Jira user account.
 type User struct {
 	Self         string `json:"self"`
 	AccountID    string `json:"accountId"`
@@ -9,6 +10,7 @@ type User struct {
 	TimeZone     string `json:"timeZone"`
 }
 
+// Issue represents a Jira issue with its key and fields.
 type Issue struct {
 	ID     string      `json:"id"`
 	Key    string      `json:"key"`
@@ -65,6 +67,7 @@ type Transition struct {
 	To   *Status `json:"to"`
 }
 
+// SearchResult holds a paginated list of issues returned by a JQL query.
 type SearchResult struct {
 	StartAt    int     `json:"startAt"`
 	MaxResults int     `json:"maxResults"`
@@ -72,6 +75,7 @@ type SearchResult struct {
 	Issues     []Issue `json:"issues"`
 }
 
+// CreateIssueInput holds the parameters for creating a new Jira issue.
 type CreateIssueInput struct {
 	ProjectKey  string            `json:"projectKey"`
 	Summary     string            `json:"summary"`
@@ -87,6 +91,7 @@ type transitionsResponse struct {
 	Transitions []Transition `json:"transitions"`
 }
 
+// Comment represents a comment on a Jira issue.
 type Comment struct {
 	ID      string `json:"id"`
 	Author  *User  `json:"author"`

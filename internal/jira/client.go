@@ -11,10 +11,12 @@ import (
 	"github.com/putcho01/atlassian-cli/internal/httpclient"
 )
 
+// Client is a Jira REST API v2 client.
 type Client struct {
 	http *httpclient.Client
 }
 
+// NewClient creates a new Client from the given configuration.
 func NewClient(cfg *config.AtlassianConfig) *Client {
 	return &Client{http: httpclient.NewFromConfig(cfg.URL, cfg.Email, cfg.Token)}
 }
