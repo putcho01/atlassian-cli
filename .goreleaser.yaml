@@ -32,3 +32,6 @@ changelog:
       - "^docs:"
       - "^test:"
       - "^chore:"
+
+release:
+  use_existing_draft: true
