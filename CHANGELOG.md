@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.2.5](https://github.com/putcho01/atlassian-cli/compare/v0.2.4...v0.2.5) - 2026-05-11
+- fix tagpr.yml by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/10
+
 ## [v0.2.4](https://github.com/putcho01/atlassian-cli/compare/v0.2.3...v0.2.4) - 2026-05-11
 - :wrench:(release): set up automated release flow with tagpr by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/8
 
