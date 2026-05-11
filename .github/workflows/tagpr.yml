@@ -1,4 +1,4 @@
-name: Tagpr
+name: Tagpr and Release
 
 on:
   push:
@@ -12,6 +12,8 @@ permissions:
 jobs:
   tagpr:
     runs-on: ubuntu-latest
+    outputs:
+      tagpr-tag: ${{ steps.run-tagpr.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,5 +24,27 @@ jobs:
       - id: run-tagpr
         name: Run tagpr
         uses: Songmu/tagpr@v1.19.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    needs: tagpr
+    if: needs.tagpr.outputs.tagpr-tag != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.tagpr.outputs.tagpr-tag }}
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          version: "~> v2"
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
