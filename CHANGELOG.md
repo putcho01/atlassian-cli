@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.2.6](https://github.com/putcho01/atlassian-cli/compare/v0.2.5...v0.2.6) - 2026-05-11
+- :wrench:(release): use existing draft release in GoReleaser by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/12
+
 ## [v0.2.5](https://github.com/putcho01/atlassian-cli/compare/v0.2.4...v0.2.5) - 2026-05-11
 - fix tagpr.yml by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/10
 
