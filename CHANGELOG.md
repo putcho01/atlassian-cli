@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.2.7](https://github.com/putcho01/atlassian-cli/compare/v0.2.6...v0.2.7) - 2026-07-11
+- build(deps): bump golang.org/x/net from 0.53.0 to 0.55.0 by @dependabot[bot] in https://github.com/putcho01/atlassian-cli/pull/14
+
 ## [v0.2.6](https://github.com/putcho01/atlassian-cli/compare/v0.2.5...v0.2.6) - 2026-05-11
 - :wrench:(release): use existing draft release in GoReleaser by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/12
 
