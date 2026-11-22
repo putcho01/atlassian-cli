@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.2.7](https://github.com/putcho01/atlassian-cli/compare/v0.2.6...v0.2.7) - 2026-11-22
+
+- build(deps): bump golang.org/x/net from 0.53.0 to 0.55.0 by @dependabot[bot] in https://github.com/putcho01/atlassian-cli/pull/14
+- :arrow_up:(deps): update Go dependencies and fix mcp-server startup panic by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/16
+- :wrench:(dependabot): add dependabot config and patch auto-approve workflow by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/17
+- :lock:(ci): add GitHub Actions workflow lockfile by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/18
+- :rotating_light:(lint): migrate golangci-lint to v2 and add lint job to CI by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/22
+- :arrow_up:(go): bump Go to 1.27 by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/21
+- build(deps): bump dependabot/fetch-metadata from 2 to 3 in the github-actions group across 1 directory by @dependabot[bot] in https://github.com/putcho01/atlassian-cli/pull/20
+
 ## [v0.2.6](https://github.com/putcho01/atlassian-cli/compare/v0.2.5...v0.2.6) - 2026-05-11
 - :wrench:(release): use existing draft release in GoReleaser by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/12
 
