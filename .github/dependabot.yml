@@ -1,0 +1,36 @@
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+      semver-major-days: 7
+      semver-minor-days: 7
+      semver-patch-days: 0
+    groups:
+      # 依存は最初にマッチしたグループに入るため、patch を先頭に置く
+      patch:
+        patterns: ["*"]
+        update-types: [patch]
+      charmbracelet:
+        patterns: ["github.com/charmbracelet/*"]
+        update-types: [minor, major]
+      golang-x:
+        patterns: ["golang.org/x/*"]
+        update-types: [minor, major]
+      spf13:
+        patterns: ["github.com/spf13/*"]
+        update-types: [minor, major]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # github-actions は semver 別の cooldown 非対応のため default-days のみ
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ["*"]
