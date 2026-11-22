@@ -144,7 +144,7 @@ func TestListComments(t *testing.T) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/rest/api/2/issue/TEST-1/comment", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(commentsResponse{Comments: comments, Total: 2})
+		_ = json.NewEncoder(w).Encode(commentsResponse{Comments: comments, Total: 2})
 	})
 	srv := httptest.NewServer(mux)
 	defer srv.Close()
@@ -185,13 +185,17 @@ func TestAddComment(t *testing.T) {
 			mux := http.NewServeMux()
 			mux.HandleFunc("/rest/api/2/issue/TEST-1/comment", func(w http.ResponseWriter, r *http.Request) {
 				var req map[string]any
-				json.NewDecoder(r.Body).Decode(&req)
+				if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+					t.Errorf("decode request: %v", err)
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
 				if req["body"] == "error" {
 					w.WriteHeader(http.StatusInternalServerError)
 					return
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tt.want)
+				_ = json.NewEncoder(w).Encode(tt.want)
 			})
 			srv := httptest.NewServer(mux)
 			defer srv.Close()
@@ -274,7 +278,7 @@ func TestTransitionIssue(t *testing.T) {
 				switch r.Method {
 				case http.MethodGet:
 					w.Header().Set("Content-Type", "application/json")
-					json.NewEncoder(w).Encode(transitionsResponse{Transitions: tt.transitions})
+					_ = json.NewEncoder(w).Encode(transitionsResponse{Transitions: tt.transitions})
 				case http.MethodPost:
 					w.WriteHeader(http.StatusNoContent)
 				default:

@@ -153,7 +153,7 @@ func (m issueListModel) detailView() string {
 		{"Updated", issue.Fields.Updated},
 	}
 	for _, r := range rows {
-		sb.WriteString(fmt.Sprintf("  %s %s\n", styleStatus.Render(r.label), styleDetail.Render(r.value)))
+		fmt.Fprintf(&sb, "  %s %s\n", styleStatus.Render(r.label), styleDetail.Render(r.value))
 	}
 
 	if issue.Fields.Description != "" {

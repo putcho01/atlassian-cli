@@ -182,7 +182,9 @@ func (f *Formatter) PrintPage(page *confluence.Page) error {
 		tw := tabwriter.NewWriter(f.writer, 0, 4, 2, ' ', 0)
 		fmt.Fprintf(tw, "ID\tTITLE\tSTATUS\tVERSION\n")
 		fmt.Fprintf(tw, "%s\t%s\t%s\t%d\n", page.ID, page.Title, page.Status, page.Version.Number)
-		tw.Flush()
+		if err := tw.Flush(); err != nil {
+			return err
+		}
 		if page.Body.Storage != nil {
 			fmt.Fprintf(f.writer, "\n%s\n", htmlconv.Convert(page.Body.Storage.Value))
 		}
