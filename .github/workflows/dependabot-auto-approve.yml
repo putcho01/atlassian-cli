@@ -16,7 +16,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # グループ PR の update-type は含まれる更新のうち最大のものになる
+      # For grouped PRs, update-type is the highest semver change among the updates
       - name: Approve patch updates
         if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
         run: gh pr review --approve "$PR_URL"

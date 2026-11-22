@@ -10,7 +10,7 @@ updates:
       semver-minor-days: 7
       semver-patch-days: 0
     groups:
-      # 依存は最初にマッチしたグループに入るため、patch を先頭に置く
+      # A dependency joins the first matching group, so keep patch first
       patch:
         patterns: ["*"]
         update-types: [patch]
@@ -28,7 +28,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    # github-actions は semver 別の cooldown 非対応のため default-days のみ
+    # github-actions does not support semver-specific cooldown, only default-days
     cooldown:
       default-days: 7
     groups:
