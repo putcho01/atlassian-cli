@@ -22,3 +22,17 @@ jobs:
 
       - name: Run tests
         run: go test --shuffle on --race -json ./... | tparse -all -format markdown | tee -a $GITHUB_STEP_SUMMARY
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-go@v7.1.0
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - uses: golangci/golangci-lint-action@v9.3.0
+        with:
+          version: v2.15.0
