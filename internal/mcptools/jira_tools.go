@@ -15,43 +15,43 @@ import (
 type emptyInput struct{}
 
 type getIssueInput struct {
-	Key string `json:"key" jsonschema:"description=The Jira issue key (e.g. PROJ-123)"`
+	Key string `json:"key" jsonschema:"The Jira issue key (e.g. PROJ-123)"`
 }
 
 type searchIssuesInput struct {
-	JQL        string `json:"jql" jsonschema:"description=JQL query string"`
-	MaxResults int    `json:"max_results,omitempty" jsonschema:"description=Maximum number of results (default 50)"`
+	JQL        string `json:"jql" jsonschema:"JQL query string"`
+	MaxResults int    `json:"max_results,omitempty" jsonschema:"Maximum number of results (default 50)"`
 }
 
 type createIssueInput struct {
-	ProjectKey  string `json:"project_key" jsonschema:"description=Project key (e.g. PROJ)"`
-	Summary     string `json:"summary" jsonschema:"description=Issue summary"`
-	IssueType   string `json:"issue_type,omitempty" jsonschema:"description=Issue type (default Task)"`
-	Description string `json:"description,omitempty" jsonschema:"description=Issue description"`
-	Assignee    string `json:"assignee,omitempty" jsonschema:"description=Assignee username"`
-	Priority    string `json:"priority,omitempty" jsonschema:"description=Priority name"`
+	ProjectKey  string `json:"project_key" jsonschema:"Project key (e.g. PROJ)"`
+	Summary     string `json:"summary" jsonschema:"Issue summary"`
+	IssueType   string `json:"issue_type,omitempty" jsonschema:"Issue type (default Task)"`
+	Description string `json:"description,omitempty" jsonschema:"Issue description"`
+	Assignee    string `json:"assignee,omitempty" jsonschema:"Assignee username"`
+	Priority    string `json:"priority,omitempty" jsonschema:"Priority name"`
 }
 
 type updateIssueInput struct {
-	Key    string         `json:"key" jsonschema:"description=The Jira issue key"`
-	Fields map[string]any `json:"fields" jsonschema:"description=Fields to update as key-value pairs"`
+	Key    string         `json:"key" jsonschema:"The Jira issue key"`
+	Fields map[string]any `json:"fields" jsonschema:"Fields to update as key-value pairs"`
 }
 
 type deleteIssueInput struct {
-	Key string `json:"key" jsonschema:"description=The Jira issue key to delete"`
+	Key string `json:"key" jsonschema:"The Jira issue key to delete"`
 }
 
 type transitionIssueInput struct {
-	Key    string `json:"key" jsonschema:"description=The Jira issue key"`
-	Status string `json:"status" jsonschema:"description=Target status name"`
+	Key    string `json:"key" jsonschema:"The Jira issue key"`
+	Status string `json:"status" jsonschema:"Target status name"`
 }
 
 type getTransitionsInput struct {
-	Key string `json:"key" jsonschema:"description=The Jira issue key"`
+	Key string `json:"key" jsonschema:"The Jira issue key"`
 }
 
 type getSubtasksInput struct {
-	Key string `json:"key" jsonschema:"description=The parent Jira issue key"`
+	Key string `json:"key" jsonschema:"The parent Jira issue key"`
 }
 
 // --- Registration ---
