@@ -1,6 +1,6 @@
 module github.com/putcho01/atlassian-cli
 
-go 1.26.0
+go 1.27.0
 
 require (
 	github.com/charmbracelet/bubbles v1.0.0
