@@ -56,7 +56,11 @@ func TestCreatePage(t *testing.T) {
 			mux := http.NewServeMux()
 			mux.HandleFunc("/rest/api/content", func(w http.ResponseWriter, r *http.Request) {
 				var req map[string]any
-				json.NewDecoder(r.Body).Decode(&req)
+				if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+					t.Errorf("decode request: %v", err)
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
 				if space, _ := req["space"].(map[string]any); space != nil {
 					if space["key"] == "ERR" {
 						w.WriteHeader(http.StatusInternalServerError)
@@ -64,7 +68,7 @@ func TestCreatePage(t *testing.T) {
 					}
 				}
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tt.want)
+				_ = json.NewEncoder(w).Encode(tt.want)
 			})
 			srv := httptest.NewServer(mux)
 			defer srv.Close()
@@ -116,7 +120,7 @@ func TestUpdatePage(t *testing.T) {
 			mux := http.NewServeMux()
 			mux.HandleFunc("/rest/api/content/123", func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(tt.want)
+				_ = json.NewEncoder(w).Encode(tt.want)
 			})
 			mux.HandleFunc("/rest/api/content/999", func(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusNotFound)
@@ -150,17 +154,21 @@ func TestUpdatePageAutoVersion(t *testing.T) {
 	mux.HandleFunc("/rest/api/content/123", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		if r.Method == http.MethodGet {
-			json.NewEncoder(w).Encode(current)
+			_ = json.NewEncoder(w).Encode(current)
 		} else {
 			// verify version was auto-incremented
 			var req map[string]any
-			json.NewDecoder(r.Body).Decode(&req)
+			if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+				t.Errorf("decode request: %v", err)
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
 			ver := req["version"].(map[string]any)
 			if int(ver["number"].(float64)) != 4 {
 				w.WriteHeader(http.StatusBadRequest)
 				return
 			}
-			json.NewEncoder(w).Encode(updated)
+			_ = json.NewEncoder(w).Encode(updated)
 		}
 	})
 	srv := httptest.NewServer(mux)
