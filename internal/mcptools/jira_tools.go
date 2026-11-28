@@ -6,7 +6,6 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/putcho01/atlassian-cli/internal/config"
-	"github.com/putcho01/atlassian-cli/internal/htmlconv"
 	"github.com/putcho01/atlassian-cli/internal/jira"
 )
 
@@ -80,7 +79,6 @@ func registerJiraTools(s *mcp.Server, enabledGroups []string) {
 			if err != nil {
 				return nil, nil, err
 			}
-			issue.Fields.Description = htmlconv.Convert(issue.Fields.Description)
 			return textResult(issue)
 		})
 
@@ -93,9 +91,6 @@ func registerJiraTools(s *mcp.Server, enabledGroups []string) {
 			result, err := client.SearchIssues(ctx, input.JQL, input.MaxResults)
 			if err != nil {
 				return nil, nil, err
-			}
-			for i := range result.Issues {
-				result.Issues[i].Fields.Description = htmlconv.Convert(result.Issues[i].Fields.Description)
 			}
 			return textResult(result)
 		})

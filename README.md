@@ -184,7 +184,7 @@ atlassian-cli jira issue search "project = PROJ" -o markdown
 
 ## HTML to Markdown Conversion
 
-When using `-o markdown`, HTML content (Jira descriptions, Confluence page bodies and comments) is automatically converted to clean GitHub-flavored Markdown. Confluence storage format macros are also handled:
+When using `-o markdown`, Confluence page bodies (storage format) are automatically converted to clean GitHub-flavored Markdown. Jira descriptions and comments are printed as returned by the API (wiki markup or plain text), since they are not HTML. Confluence storage format macros are also handled:
 
 - Code blocks (`ac:structured-macro name="code"`) -> fenced code blocks
 - Admonitions (note, info, warning, tip) -> blockquotes with labels

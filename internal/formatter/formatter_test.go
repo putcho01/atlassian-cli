@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/putcho01/atlassian-cli/internal/confluence"
 	"github.com/putcho01/atlassian-cli/internal/jira"
 )
 
@@ -162,6 +163,64 @@ func TestPrintComment(t *testing.T) {
 				if !strings.Contains(out, want) {
 					t.Errorf("output does not contain %q\ngot: %s", want, out)
 				}
+			}
+		})
+	}
+}
+
+func TestMarkdownKeepsJiraTextVerbatim(t *testing.T) {
+	t.Parallel()
+	const text = "use List<String> in {code}Map<K,V>{code}"
+
+	var buf bytes.Buffer
+	f := New(Markdown, &buf)
+	if err := f.PrintIssue(&jira.Issue{Key: "P-1", Fields: jira.IssueFields{Description: text}}); err != nil {
+		t.Fatalf("PrintIssue() error: %v", err)
+	}
+	if err := f.PrintComment(&jira.Comment{Body: text}); err != nil {
+		t.Fatalf("PrintComment() error: %v", err)
+	}
+	if got := strings.Count(buf.String(), text); got != 2 {
+		t.Errorf("verbatim text appears %d times, want 2\ngot: %s", got, buf.String())
+	}
+
+	buf.Reset()
+	if err := New(Table, &buf).PrintComment(&jira.Comment{Body: text}); err != nil {
+		t.Fatalf("PrintComment() error: %v", err)
+	}
+	if !strings.Contains(buf.String(), text) {
+		t.Errorf("table output does not contain %q\ngot: %s", text, buf.String())
+	}
+}
+
+func TestMarkdownTablesEscapeCells(t *testing.T) {
+	t.Parallel()
+	user := &jira.User{DisplayName: "a|b"}
+	tests := []struct {
+		name  string
+		print func(*Formatter) error
+	}{
+		{"user", func(f *Formatter) error { return f.PrintUser(user) }},
+		{"issue", func(f *Formatter) error {
+			return f.PrintIssue(&jira.Issue{Fields: jira.IssueFields{Labels: []string{"a|b"}}})
+		}},
+		{"issue list", func(f *Formatter) error {
+			return f.PrintIssueList([]jira.Issue{{Fields: jira.IssueFields{Summary: "a|b"}}})
+		}},
+		{"transitions", func(f *Formatter) error { return f.PrintTransitions([]jira.Transition{{Name: "a|b"}}) }},
+		{"page", func(f *Formatter) error { return f.PrintPage(&confluence.Page{Status: "a|b"}) }},
+		{"labels", func(f *Formatter) error { return f.PrintLabels([]confluence.Label{{Name: "a|b"}}) }},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			var buf bytes.Buffer
+			if err := tt.print(New(Markdown, &buf)); err != nil {
+				t.Fatalf("print error: %v", err)
+			}
+			if !strings.Contains(buf.String(), `| a\|b |`) {
+				t.Errorf("cell is not escaped\ngot: %s", buf.String())
 			}
 		})
 	}
