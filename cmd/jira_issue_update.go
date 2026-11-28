@@ -19,7 +19,7 @@ var jiraIssueUpdateCmd = &cobra.Command{
 			return err
 		}
 
-		fieldFlags, _ := cmd.Flags().GetStringSlice("field")
+		fieldFlags, _ := cmd.Flags().GetStringArray("field")
 		fields := make(map[string]any)
 		for _, f := range fieldFlags {
 			parts := strings.SplitN(f, "=", 2)
@@ -45,6 +45,6 @@ var jiraIssueUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	jiraIssueUpdateCmd.Flags().StringSlice("field", nil, "Field to update (key=value)")
+	jiraIssueUpdateCmd.Flags().StringArray("field", nil, "Field to update (key=value, repeatable)")
 	jiraIssueCmd.AddCommand(jiraIssueUpdateCmd)
 }
