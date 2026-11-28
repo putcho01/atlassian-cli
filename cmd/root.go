@@ -38,7 +38,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version = "0.2.7"
+var version = "0.2.8"
 
 var rootCmd = &cobra.Command{
 	Use:   "atlassian-cli",
