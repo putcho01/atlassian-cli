@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.2.8](https://github.com/putcho01/atlassian-cli/compare/v0.2.7...v0.2.8) - 2026-11-28
+
+- :bug: fix CI failure detection, content loss in conversion, restrictions, and --field by @putcho01 in https://github.com/putcho01/atlassian-cli/pull/23
+
 ## [v0.2.7](https://github.com/putcho01/atlassian-cli/compare/v0.2.6...v0.2.7) - 2026-11-22
 
 - build(deps): bump golang.org/x/net from 0.53.0 to 0.55.0 by @dependabot[bot] in https://github.com/putcho01/atlassian-cli/pull/14
