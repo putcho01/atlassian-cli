@@ -1,11 +1,39 @@
 package htmlconv
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 
 	"golang.org/x/net/html"
 )
+
+var (
+	cdataRe = regexp.MustCompile(`(?s)<!\[CDATA\[(.*?)\]\]>`)
+	// selfClosingRe matches self-closing ac:/ri: tags, allowing ">" inside quoted attribute values.
+	selfClosingRe = regexp.MustCompile(`<((?:ac|ri):[\w-]+)((?:\s+[^\s=/>]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>/]+))?)*)\s*/>`)
+)
+
+// preprocess rewrites Confluence storage-format constructs that the HTML parser mishandles:
+// CDATA sections become comments (and are dropped), and self-closing unknown tags are treated
+// as open tags that swallow the rest of the document.
+func preprocess(s string) string {
+	s = cdataRe.ReplaceAllStringFunc(s, func(m string) string {
+		return html.EscapeString(cdataRe.FindStringSubmatch(m)[1])
+	})
+	return selfClosingRe.ReplaceAllString(s, "<$1$2></$1>")
+}
+
+// EscapeTableCell makes s safe to place in a single Markdown table cell.
+func EscapeTableCell(s string) string {
+	var lines []string
+	for _, line := range strings.Split(s, "\n") {
+		if line = strings.TrimSpace(line); line != "" {
+			lines = append(lines, line)
+		}
+	}
+	return strings.ReplaceAll(strings.Join(lines, "<br>"), "|", `\|`)
+}
 
 // Convert transforms HTML (including Confluence storage format) into GitHub-flavored Markdown.
 func Convert(htmlStr string) string {
@@ -13,7 +41,7 @@ func Convert(htmlStr string) string {
 		return ""
 	}
 
-	doc, err := html.Parse(strings.NewReader(htmlStr))
+	doc, err := html.Parse(strings.NewReader(preprocess(htmlStr)))
 	if err != nil {
 		return htmlStr
 	}
@@ -48,10 +76,6 @@ func renderElement(b *strings.Builder, n *html.Node) {
 	}
 	if tag == "ac:link" {
 		renderACLink(b, n)
-		return
-	}
-	if tag == "ac:emoticon" {
-		walkChildren(b, n) // parser may absorb following text nodes as children
 		return
 	}
 	if tag == "ac:plain-text-body" || tag == "ac:rich-text-body" {
@@ -178,17 +202,31 @@ func renderMacro(b *strings.Builder, n *html.Node) {
 
 func renderACLink(b *strings.Builder, n *html.Node) {
 	pageTitle := ""
+	var label strings.Builder
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		if c.Type == html.ElementNode && c.Data == "ri:page" {
+		if c.Type != html.ElementNode {
+			continue
+		}
+		switch c.Data {
+		case "ri:page":
 			pageTitle = getAttr(c, "ri:content-title")
+		case "ac:plain-text-link-body", "ac:link-body":
+			walkChildren(&label, c)
 		}
 	}
-	if pageTitle != "" {
-		b.WriteString("*")
-		b.WriteString(pageTitle)
-		b.WriteString("*")
-	} else {
+	text := strings.TrimSpace(label.String())
+	if text == "" {
+		text = pageTitle
+	}
+	switch {
+	case text == "":
 		walkChildren(b, n)
+	case pageTitle != "":
+		b.WriteString("*")
+		b.WriteString(text)
+		b.WriteString("*")
+	default:
+		b.WriteString(text)
 	}
 }
 
@@ -271,7 +309,7 @@ func collectRows(n *html.Node, rows *[][]string) {
 			if c.Type == html.ElementNode && (c.Data == "td" || c.Data == "th") {
 				var cellBuf strings.Builder
 				walkChildren(&cellBuf, c)
-				cells = append(cells, strings.TrimSpace(cellBuf.String()))
+				cells = append(cells, EscapeTableCell(cellBuf.String()))
 			}
 		}
 		*rows = append(*rows, cells)
@@ -323,4 +361,3 @@ func getMacroBody(n *html.Node) string {
 	}
 	return ""
 }
-

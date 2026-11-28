@@ -59,9 +59,9 @@ func (f *Formatter) PrintUser(user *jira.User) error {
 	case Markdown:
 		fmt.Fprintf(f.writer, "## User: %s\n\n", user.DisplayName)
 		fmt.Fprintf(f.writer, "| Field | Value |\n|-------|-------|\n")
-		fmt.Fprintf(f.writer, "| Account ID | %s |\n", user.AccountID)
-		fmt.Fprintf(f.writer, "| Display Name | %s |\n", user.DisplayName)
-		fmt.Fprintf(f.writer, "| Email | %s |\n", user.EmailAddress)
+		fmt.Fprintf(f.writer, "| Account ID | %s |\n", cell(user.AccountID))
+		fmt.Fprintf(f.writer, "| Display Name | %s |\n", cell(user.DisplayName))
+		fmt.Fprintf(f.writer, "| Email | %s |\n", cell(user.EmailAddress))
 		fmt.Fprintf(f.writer, "| Active | %v |\n", user.Active)
 		return nil
 	default:
@@ -80,16 +80,16 @@ func (f *Formatter) PrintIssue(issue *jira.Issue) error {
 	case Markdown:
 		fmt.Fprintf(f.writer, "## %s: %s\n\n", issue.Key, issue.Fields.Summary)
 		fmt.Fprintf(f.writer, "| Field | Value |\n|-------|-------|\n")
-		fmt.Fprintf(f.writer, "| Status | %s |\n", safeName(issue.Fields.Status))
-		fmt.Fprintf(f.writer, "| Type | %s |\n", safeIssueType(issue.Fields.IssueType))
-		fmt.Fprintf(f.writer, "| Priority | %s |\n", safePriority(issue.Fields.Priority))
-		fmt.Fprintf(f.writer, "| Assignee | %s |\n", safeUser(issue.Fields.Assignee))
-		fmt.Fprintf(f.writer, "| Reporter | %s |\n", safeUser(issue.Fields.Reporter))
-		fmt.Fprintf(f.writer, "| Labels | %s |\n", strings.Join(issue.Fields.Labels, ", "))
-		fmt.Fprintf(f.writer, "| Created | %s |\n", issue.Fields.Created)
-		fmt.Fprintf(f.writer, "| Updated | %s |\n", issue.Fields.Updated)
+		fmt.Fprintf(f.writer, "| Status | %s |\n", cell(safeName(issue.Fields.Status)))
+		fmt.Fprintf(f.writer, "| Type | %s |\n", cell(safeIssueType(issue.Fields.IssueType)))
+		fmt.Fprintf(f.writer, "| Priority | %s |\n", cell(safePriority(issue.Fields.Priority)))
+		fmt.Fprintf(f.writer, "| Assignee | %s |\n", cell(safeUser(issue.Fields.Assignee)))
+		fmt.Fprintf(f.writer, "| Reporter | %s |\n", cell(safeUser(issue.Fields.Reporter)))
+		fmt.Fprintf(f.writer, "| Labels | %s |\n", cell(strings.Join(issue.Fields.Labels, ", ")))
+		fmt.Fprintf(f.writer, "| Created | %s |\n", cell(issue.Fields.Created))
+		fmt.Fprintf(f.writer, "| Updated | %s |\n", cell(issue.Fields.Updated))
 		if issue.Fields.Description != "" {
-			fmt.Fprintf(f.writer, "\n### Description\n\n%s\n", htmlconv.Convert(issue.Fields.Description))
+			fmt.Fprintf(f.writer, "\n### Description\n\n%s\n", issue.Fields.Description)
 		}
 		return nil
 	default:
@@ -114,10 +114,10 @@ func (f *Formatter) PrintIssueList(issues []jira.Issue) error {
 		fmt.Fprintf(f.writer, "|-----|---------|--------|----------|----------|\n")
 		for _, issue := range issues {
 			fmt.Fprintf(f.writer, "| %s | %s | %s | %s | %s |\n",
-				issue.Key, issue.Fields.Summary,
-				safeName(issue.Fields.Status),
-				safeUser(issue.Fields.Assignee),
-				safePriority(issue.Fields.Priority))
+				cell(issue.Key), cell(issue.Fields.Summary),
+				cell(safeName(issue.Fields.Status)),
+				cell(safeUser(issue.Fields.Assignee)),
+				cell(safePriority(issue.Fields.Priority)))
 		}
 		return nil
 	default:
@@ -146,7 +146,7 @@ func (f *Formatter) PrintTransitions(transitions []jira.Transition) error {
 			if t.To != nil {
 				to = t.To.Name
 			}
-			fmt.Fprintf(f.writer, "| %s | %s | %s |\n", t.ID, t.Name, to)
+			fmt.Fprintf(f.writer, "| %s | %s | %s |\n", cell(t.ID), cell(t.Name), cell(to))
 		}
 		return nil
 	default:
@@ -171,8 +171,8 @@ func (f *Formatter) PrintPage(page *confluence.Page) error {
 	case Markdown:
 		fmt.Fprintf(f.writer, "## %s\n\n", page.Title)
 		fmt.Fprintf(f.writer, "| Field | Value |\n|-------|-------|\n")
-		fmt.Fprintf(f.writer, "| ID | %s |\n", page.ID)
-		fmt.Fprintf(f.writer, "| Status | %s |\n", page.Status)
+		fmt.Fprintf(f.writer, "| ID | %s |\n", cell(page.ID))
+		fmt.Fprintf(f.writer, "| Status | %s |\n", cell(page.Status))
 		fmt.Fprintf(f.writer, "| Version | %d |\n", page.Version.Number)
 		if page.Body.Storage != nil {
 			fmt.Fprintf(f.writer, "\n### Content\n\n%s\n", htmlconv.Convert(page.Body.Storage.Value))
@@ -200,7 +200,7 @@ func (f *Formatter) PrintLabels(labels []confluence.Label) error {
 	case Markdown:
 		fmt.Fprintf(f.writer, "| Name | Prefix |\n|------|--------|\n")
 		for _, l := range labels {
-			fmt.Fprintf(f.writer, "| %s | %s |\n", l.Name, l.Prefix)
+			fmt.Fprintf(f.writer, "| %s | %s |\n", cell(l.Name), cell(l.Prefix))
 		}
 		return nil
 	default:
@@ -243,12 +243,12 @@ func (f *Formatter) PrintComment(c *jira.Comment) error {
 	case JSON:
 		return f.PrintJSON(c)
 	case Markdown:
-		fmt.Fprintf(f.writer, "### %s — %s\n\n%s\n", safeUserDisplay(c.Author, "Unknown"), c.Created, htmlconv.Convert(c.Body))
+		fmt.Fprintf(f.writer, "### %s — %s\n\n%s\n", safeUserDisplay(c.Author, "Unknown"), c.Created, c.Body)
 		return nil
 	default:
 		fmt.Fprintf(f.writer, "ID\tAUTHOR\tCREATED\n")
 		fmt.Fprintf(f.writer, "%s\t%s\t%s\n", c.ID, safeUserDisplay(c.Author, "Unknown"), c.Created)
-		fmt.Fprintf(f.writer, "\n%s\n", htmlconv.Convert(c.Body))
+		fmt.Fprintf(f.writer, "\n%s\n", c.Body)
 		return nil
 	}
 }
@@ -263,6 +263,9 @@ func (f *Formatter) PrintMessage(msg string) error {
 		return err
 	}
 }
+
+// cell escapes a value for a Markdown table cell.
+func cell(s string) string { return htmlconv.EscapeTableCell(s) }
 
 func safeName(s *jira.Status) string {
 	if s == nil {

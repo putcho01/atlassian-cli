@@ -187,6 +187,50 @@ func TestUpdatePageAutoVersion(t *testing.T) {
 	}
 }
 
+func TestGetRestrictions(t *testing.T) {
+	t.Parallel()
+	mux := http.NewServeMux()
+	mux.HandleFunc("/rest/api/content/123/restriction", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"results":[{"operation":"read","restrictions":{"user":{"results":[{"accountId":"a1"}],"size":1}}}],"size":1}`))
+	})
+	srv := httptest.NewServer(mux)
+	defer srv.Close()
+
+	got, err := newTestConfluenceClient(srv.URL).GetRestrictions(context.Background(), "123")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	want := []Restriction{{
+		Operation: "read",
+		User:      &RestrictionSubject{User: &RestrictionUsers{Results: []User{{AccountID: "a1"}}, Size: 1}},
+	}}
+	if diff := cmp.Diff(want, got); diff != "" {
+		t.Errorf("GetRestrictions() diff (-want +got):\n%s", diff)
+	}
+}
+
+// PUT would replace the existing restrictions, so adding must use POST.
+func TestAddRestrictionUsesPost(t *testing.T) {
+	t.Parallel()
+	var method string
+	mux := http.NewServeMux()
+	mux.HandleFunc("/rest/api/content/123/restriction", func(w http.ResponseWriter, r *http.Request) {
+		method = r.Method
+		w.WriteHeader(http.StatusOK)
+	})
+	srv := httptest.NewServer(mux)
+	defer srv.Close()
+
+	input := &RestrictionInput{Operation: "read", Type: "user", Name: "a1"}
+	if err := newTestConfluenceClient(srv.URL).AddRestriction(context.Background(), "123", input); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if method != http.MethodPost {
+		t.Errorf("method = %s, want POST", method)
+	}
+}
+
 func TestBuildRestrictionBody(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
@@ -205,10 +249,10 @@ func TestBuildRestrictionBody(t *testing.T) {
 				{
 					"operation": "update",
 					"restrictions": map[string]any{
-						"user": map[string]any{
+						"user": []map[string]any{{
 							"type":      "known",
 							"accountId": "acc-id-123",
-						},
+						}},
 					},
 				},
 			},
@@ -224,10 +268,10 @@ func TestBuildRestrictionBody(t *testing.T) {
 				{
 					"operation": "read",
 					"restrictions": map[string]any{
-						"group": map[string]any{
+						"group": []map[string]any{{
 							"type": "group",
 							"name": "engineering",
-						},
+						}},
 					},
 				},
 			},
@@ -243,10 +287,10 @@ func TestBuildRestrictionBody(t *testing.T) {
 				{
 					"operation": "update",
 					"restrictions": map[string]any{
-						"group": map[string]any{
+						"group": []map[string]any{{
 							"type": "group",
 							"name": "admins",
-						},
+						}},
 					},
 				},
 			},

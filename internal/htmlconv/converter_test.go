@@ -87,6 +87,36 @@ func TestConvert(t *testing.T) {
 			`<ac:structured-macro ac:name="status"><ac:parameter ac:name="title">進行中</ac:parameter><ac:parameter ac:name="colour">Yellow</ac:parameter></ac:structured-macro>`,
 			"進行中",
 		},
+		{
+			"code macro CDATA body kept verbatim",
+			"<ac:structured-macro ac:name=\"code\"><ac:parameter ac:name=\"language\">xml</ac:parameter><ac:plain-text-body><![CDATA[<a x=\"1\">&amp;</a>\n<ri:page />]]></ac:plain-text-body></ac:structured-macro>",
+			"```xml\n<a x=\"1\">&amp;</a>\n<ri:page />\n```",
+		},
+		{
+			"self-closing macro keeps following content",
+			`<p>intro</p><ac:structured-macro ac:name="toc" /><h2>Section</h2><p>body</p>`,
+			"intro\n\n\n## Section\n\nbody",
+		},
+		{
+			"self-closing macro with > in attribute",
+			`<ac:structured-macro ac:name="toc" ac:x="a>b"/><p>body</p>`,
+			"body",
+		},
+		{
+			"ac:link prefers CDATA link body over page title",
+			`<ac:link><ri:page ri:content-title="My Page" /><ac:plain-text-link-body><![CDATA[label]]></ac:plain-text-link-body></ac:link>`,
+			"*label*",
+		},
+		{
+			"ac:link without page keeps CDATA link body",
+			`<ac:link><ri:attachment ri:filename="a.pdf" /><ac:plain-text-link-body><![CDATA[the file]]></ac:plain-text-link-body></ac:link>`,
+			"the file",
+		},
+		{
+			"table cell escapes pipe and newline",
+			"<table><tr><th>h</th></tr><tr><td><p>x|y</p><p>z</p></td></tr></table>",
+			"| h |\n|---|\n| x\\|y<br>z |",
+		},
 		{"p with inline code", "<p>Use <code>go test</code> to run</p>", "Use `go test` to run"},
 	}
 

@@ -53,14 +53,17 @@ func (c *Client) RemoveLabel(ctx context.Context, pageID, label string) error {
 }
 
 func (c *Client) GetRestrictions(ctx context.Context, pageID string) ([]Restriction, error) {
-	var result []Restriction
-	err := c.http.Do(ctx, "GET", contentPath(pageID)+"/restriction", nil, nil, &result)
-	return result, err
+	var resp struct {
+		Results []Restriction `json:"results"`
+	}
+	err := c.http.Do(ctx, "GET", contentPath(pageID)+"/restriction", nil, nil, &resp)
+	return resp.Results, err
 }
 
 func (c *Client) AddRestriction(ctx context.Context, pageID string, input *RestrictionInput) error {
+	// POST adds to the existing restrictions; PUT would replace them.
 	body := buildRestrictionBody(input)
-	return c.http.Do(ctx, "PUT", contentPath(pageID)+"/restriction", nil, body, nil)
+	return c.http.Do(ctx, "POST", contentPath(pageID)+"/restriction", nil, body, nil)
 }
 
 func (c *Client) RemoveRestriction(ctx context.Context, pageID string, input *RestrictionInput) error {
@@ -151,15 +154,15 @@ func storageBody(value string) map[string]any {
 func buildRestrictionBody(input *RestrictionInput) []map[string]any {
 	subject := map[string]any{}
 	if input.Type == "user" {
-		subject["user"] = map[string]any{
+		subject["user"] = []map[string]any{{
 			"type":      "known",
 			"accountId": input.Name,
-		}
+		}}
 	} else {
-		subject["group"] = map[string]any{
+		subject["group"] = []map[string]any{{
 			"type": "group",
 			"name": input.Name,
-		}
+		}}
 	}
 	return []map[string]any{
 		{
