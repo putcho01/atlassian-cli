@@ -21,6 +21,8 @@ jobs:
         run: go install github.com/mfridman/tparse@latest
 
       - name: Run tests
+        # Explicit bash enables pipefail so a failing go test fails the step.
+        shell: bash
         run: go test --shuffle on --race -json ./... | tparse -all -format markdown | tee -a $GITHUB_STEP_SUMMARY
 
   lint:
